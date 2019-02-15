@@ -21,12 +21,14 @@ enum Color{
 class Node{
     Node left;
     Node right;
+    Node parent;
     Node next;
     int data;
     int lis;
     int height;
     int size;
     Color color;
+    boolean isNullLeaf;
     
     public static Node newNode(int data){
         Node n = new Node();

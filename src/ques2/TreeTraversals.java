@@ -12,7 +12,7 @@ public class TreeTraversals {
         }
         inOrder(root.left,order);
         
-        System.out.print(root.data + " ");
+        //System.out.print(root.data + " ");
         order.add(root.data);
         inOrder(root.right,order);
         
