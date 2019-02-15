@@ -1,35 +1,27 @@
 package ques2;
 
-
 import java.util.*;
-public class BSTtoAVL {
+
+public class AVLtoRB {
 	
-	
-	
-	public static void main(String[] args) {
-		BSTtoAVL obj = new BSTtoAVL();
+	public static void main(String args[])
+	{
+		AVLtoRB obj = new AVLtoRB();
 		System.out.println("Enter the values");
 		Scanner sc = new Scanner(System.in);
 		String input = sc.nextLine().trim();
 		String split[] = input.split(" ");
 		Node root = null;
-		System.out.println("Creating a BST!!");
+		System.out.println("Creating a AVL!!");
 		for(int i=0;i<split.length;i++)
 		{
-			root = obj.insertToBST(root,Integer.valueOf(split[i]));
+			root = obj.insert(root, Integer.valueOf(split[i]));
 		}
-		TreeTraversals tt = new TreeTraversals();
-		ArrayList<Integer> preorder = new ArrayList<Integer>();
-		preorder = tt.preOrder(root, preorder);
-		for(Integer pre : preorder)
-		{
-			root = obj.insert(root, pre);
-		}
-		System.out.print("BST converted to AVL with the root node....");
-		System.out.println(root.data);
-		sc.close();
 		
+		
+		sc.close();
 	}
+	
 	
 	private Node leftRotate(Node root){
         Node newRoot = root.right;
@@ -123,53 +115,5 @@ public class BSTtoAVL {
     private int balance(Node rootLeft, Node rootRight){
         return height(rootLeft) - height(rootRight);
     }
-	
-    /*
-     * 
-     * balances the node
-     */
-    Node doBalancing(Node root) {
-    	int balance = balance(root.left, root.right);
-    	System.out.println("Balance is "+balance);
-        if(balance > 1){
-            if(height(root.left.left) >= height(root.left.right)){
-                root = rightRotate(root);
-            }else{
-                root.left = leftRotate(root.left);
-                root = rightRotate(root);
-            }
-        }else if(balance < -1){
-            if(height(root.right.right) >= height(root.right.left)){
-                root = leftRotate(root);
-            }else{
-                root.right = rightRotate(root.right);
-                root = leftRotate(root);
-            }
-        }
-        else{
-            root.height = setHeight(root);
-            root.size = setSize(root);
-        }
-    	return root;
-    }
-    /*
-     * 
-     * This function creates a Binary Search Tree
-     */
-	Node insertToBST(Node root,int value) {
-		if(root == null){
-            return Node.newNode(value);
-        }
-        if(root.data <= value){
-            root.right = insertToBST(root.right,value);
-        }
-        else{
-            root.left = insertToBST(root.left,value);
-        }
-        root.height = setHeight(root);
-        root.size = setSize(root);
-		return root;
-	}
+
 }
-
-
