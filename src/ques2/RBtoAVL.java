@@ -1,133 +1,30 @@
 package ques2;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
+public class RBtoAVL {
 
-public class AVLtoRB {
-	
 	public static void main(String args[])
 	{
-		AVLtoRB obj = new AVLtoRB();
+		RBtoAVL obj = new RBtoAVL();
 		System.out.println("Enter the values");
 		Scanner sc = new Scanner(System.in);
 		String input = sc.nextLine().trim();
 		String split[] = input.split(" ");
 		Node root = null;
-		System.out.println("Creating a AVL!!");
+		System.out.println("Creating a RB Tree");
 		for(int i=0;i<split.length;i++)
 		{
-			root = obj.insertToAVL(root, Integer.valueOf(split[i]));
+			root = obj.insertToRB(root, Integer.valueOf(split[i]));
 		}
-		
-		TreeTraversals tt = new TreeTraversals();
-		ArrayList<Integer> inorder = new ArrayList<Integer>();
-		inorder = tt.inOrder(root, inorder);
-		Node RBroot = null;
-		for(Integer in : inorder)
-		{
-			RBroot = obj.insertToRB(RBroot, in);
-		}
-		//obj.printRedBlackTree(RBroot);
-		System.out.println("Root data is "+RBroot.data +" "+ "Root color is "+ RBroot.color);
+		obj.convertToAVL(root);
+		System.out.println("Root of the avl tree"+root.data);
 		sc.close();
 	}
 	
-	
-	private Node leftRotate(Node root){
-        Node newRoot = root.right;
-        root.right = root.right.left;
-        newRoot.left = root;
-        root.height = setHeight(root);
-        root.size = setSize(root);
-        newRoot.height = setHeight(newRoot);
-        newRoot.size = setSize(newRoot);
-        return newRoot;
-    }
-    
-    private Node rightRotate(Node root){
-        Node newRoot = root.left;
-        root.left = root.left.right;
-        newRoot.right = root;
-        root.height = setHeight(root);
-        root.size = setSize(root);
-        newRoot.height = setHeight(newRoot);
-        newRoot.size = setSize(newRoot);
-        return newRoot;
-    }
-
-    private int setHeight(Node root){
-        if(root == null){
-            return 0;
-        }
-        return 1 + Math.max((root.left != null ? root.left.height : 0), (root.right != null ? root.right.height : 0));
-    }
-    
-    private int height(Node root){
-        if(root == null){
-            return 0;
-        }else {
-            return root.height;
-        }
-    }
-    
-    /*
-     * 
-     * sets the 
-     */
-    private int setSize(Node root){
-        if(root == null){
-            return 0;
-        }
-        return 1 + Math.max((root.left != null ? root.left.size : 0), (root.right != null ? root.right.size : 0));
-    }
-    
-    /*
-     * 
-     * Insertion function for AVL Trees
-     */
-    public Node insertToAVL(Node root, int data){
-        if(root == null){
-            return Node.newNode(data);
-        }
-        if(root.data <= data){
-            root.right = insertToAVL(root.right,data);
-        }
-        else{
-            root.left = insertToAVL(root.left,data);
-        }
-        int balance = balance(root.left, root.right);
-        if(balance > 1){
-            if(height(root.left.left) >= height(root.left.right)){
-                root = rightRotate(root);
-            }else{
-                root.left = leftRotate(root.left);
-                root = rightRotate(root);
-            }
-        }else if(balance < -1){
-            if(height(root.right.right) >= height(root.right.left)){
-                root = leftRotate(root);
-            }else{
-                root.right = rightRotate(root.right);
-                root = leftRotate(root);
-            }
-        }
-        else{
-            root.height = setHeight(root);
-            root.size = setSize(root);
-        }
-        return root;
-    }
-    
-    
-    /*
-     * Check the balance of a node
-     */
-    private int balance(Node rootLeft, Node rootRight){
-        return height(rootLeft) - height(rootRight);
-    }
-    
-    /*
+	/*
      * 
      * Functions for the Red Black Tree Insertion
      */
@@ -407,5 +304,102 @@ public class AVLtoRB {
         }
         return checkBlackNodesCount(root.left, blackCount, currentCount) && checkBlackNodesCount(root.right, blackCount, currentCount);
     }
+    
+    /*
+     * 
+     * Insertion functions of AVL tree
+     */
+    
+    private Node leftRotate(Node root){
+        Node newRoot = root.right;
+        root.right = root.right.left;
+        newRoot.left = root;
+        root.height = setHeight(root);
+        root.size = setSize(root);
+        newRoot.height = setHeight(newRoot);
+        newRoot.size = setSize(newRoot);
+        return newRoot;
+    }
+    
+    private Node rightRotate(Node root){
+        Node newRoot = root.left;
+        root.left = root.left.right;
+        newRoot.right = root;
+        root.height = setHeight(root);
+        root.size = setSize(root);
+        newRoot.height = setHeight(newRoot);
+        newRoot.size = setSize(newRoot);
+        return newRoot;
+    }
 
+    private int setHeight(Node root){
+        if(root == null){
+            return 0;
+        }
+        return 1 + Math.max((root.left != null ? root.left.height : 0), (root.right != null ? root.right.height : 0));
+    }
+    
+    private int height(Node root){
+        if(root == null){
+            return 0;
+        }else {
+            return root.height;
+        }
+    }
+    
+    /*
+     * 
+     * sets the 
+     */
+    private int setSize(Node root){
+        if(root == null){
+            return 0;
+        }
+        return 1 + Math.max((root.left != null ? root.left.size : 0), (root.right != null ? root.right.size : 0));
+    }
+    
+    /*
+     * Check the balance of a node
+     */
+    private int balance(Node rootLeft, Node rootRight){
+        return height(rootLeft) - height(rootRight);
+    }
+	
+    /*
+     * 
+     * balances the node
+     */
+    Node doBalancing(Node root) {
+    	int balance = balance(root.left, root.right);
+    	//System.out.println("Balance is "+balance);
+        if(balance > 1){
+            if(height(root.left.left) >= height(root.left.right)){
+                root = rightRotate(root);
+            }else{
+                root.left = leftRotate(root.left);
+                root = rightRotate(root);
+            }
+        }else if(balance < -1){
+            if(height(root.right.right) >= height(root.right.left)){
+                root = leftRotate(root);
+            }else{
+                root.right = rightRotate(root.right);
+                root = leftRotate(root);
+            }
+        }
+        else{
+            root.height = setHeight(root);
+            root.size = setSize(root);
+        }
+    	return root;
+    }
+    
+    public void convertToAVL(Node root){
+        if(root == null){
+            return;
+        }
+        convertToAVL(root.left);
+        root = doBalancing(root);
+        convertToAVL(root.right);
+    }
 }
