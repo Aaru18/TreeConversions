@@ -21,8 +21,11 @@ enum Color{
 class Node{
     Node left;
     Node right;
+    Node mid;
     Node parent;
     Node next;
+    int dataOne;
+    int dataTwo;
     int data;
     int lis;
     int height;
@@ -34,6 +37,8 @@ class Node{
         Node n = new Node();
         n.left = null;
         n.right = null;
+        n.mid = null;
+        n.dataOne = data;
         n.data = data;
         n.lis = -1;
         n.height = 1;
